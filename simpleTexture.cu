@@ -1,22 +1,3 @@
-/*
- * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
- *
- * Please refer to the NVIDIA end user license agreement (EULA) associated
- * with this source code for terms and conditions that govern your use of
- * this software. Any use, reproduction, disclosure, or distribution of
- * this software and related documentation outside the terms of the EULA
- * is strictly prohibited.
- *
- */
-
-/*
- * This sample demonstrates how use texture fetches in CUDA
- *
- * This sample takes an input PGM image (image_filename) and generates
- * an output PGM image (image_filename_out).  This CUDA kernel performs
- * a simple 2D transform (rotation) on the texture coordinates (u,v).
- */
-
 // Includes, system
 #include <stdlib.h>
 #include <stdio.h>
@@ -40,20 +21,7 @@
 // CUDA helper functions
 #include <helper_cuda.h>         // helper functions for CUDA error check
 
-
-// Define the files that are to be save and the reference images for validation
-const char *imageFilename = "data/eltsin2048.bmp";
-const char *cpuOutImage = "data/eltsin2048_cpu.bmp";
-const char *gpuOutImage = "data/eltsin2048_gpu.bmp";
-
-
-//texture<float, cudaTextureType2D, cudaReadModeElementType> tex;
 const int mask_size = 3;
-
-////////////////////////////////////////////////////////////////////////////////
-//! Transform an image using texture lookups
-//! @param outputData  output data in global memory
-////////////////////////////////////////////////////////////////////////////////
 
 __global__ void medianFilter(float *output, int imageWidth, int imageHeight, cudaTextureObject_t tex) {
 	//  choose element
@@ -146,16 +114,13 @@ float* medianCPU(float *grayscale, unsigned int rows, unsigned int cols) {
 	return image;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Program main
-////////////////////////////////////////////////////////////////////////////////
 int main(int argc, char **argv)
 {
 	int devID = findCudaDevice(argc, (const char **)argv);
 
 	unsigned int width, height;
 
-	float * source = readImage("data/eltsin_noise.bmp", &width, &height);
+	float * source = readImage("data/eltsin2048.bmp", &width, &height);
 
 	clock_t  start_time = clock();
 	float * resultCPU = medianCPU(source, width, height);
